@@ -25,3 +25,18 @@ Timestamp: Thu Mar 31 2022 19:27:19 GMT+0200 (Central European Summer Time)
 URL: /favicon.ico
 Timestamp: Thu Mar 31 2022 19:27:19 GMT+0200 (Central European Summer Time)
 
+URL: /documentation
+Timestamp: Thu Mar 31 2022 20:31:27 GMT+0200 (Central European Summer Time)
+
+URL: /favicon.ico
+Timestamp: Thu Mar 31 2022 20:31:27 GMT+0200 (Central European Summer Time)
+
+URL: /index
+Timestamp: Thu Mar 31 2022 20:31:34 GMT+0200 (Central European Summer Time)
+
+URL: /server.js
+Timestamp: Thu Mar 31 2022 20:31:34 GMT+0200 (Central European Summer Time)
+
+URL: /favicon.ico
+Timestamp: Thu Mar 31 2022 20:31:34 GMT+0200 (Central European Summer Time)
+

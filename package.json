@@ -1,0 +1,24 @@
+{
+  "name": "movie_api",
+  "version": "1.0.0",
+  "description": "This web application will provide users with access to information about different movies, actors, genres, et. Users will be able to sign up and add their personal information and prefernces.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amro-mansour/movie_api"
+  },
+  "author": "Amro Mansour",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amro-mansour/movie_api/issues"
+  },
+  "homepage": "https://github.com/amro-mansour/movie_api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3",
+    "lodash": "^4.17.21"
+  }
+}
