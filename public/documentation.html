@@ -4,11 +4,105 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Documentation</title>
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
 <body>
 
 	<h1>Documentation Page</h1>
 	<p>The objective of this api is to build the server side component of a movies web application. The web application will provide users information about different movies, actors, genres, directors, etc. Users will also be allowed to sign up, add and update their personal information, and create a list of their favourite movies.</p>
+
+	<h2>These are the instructions on how to use the API</h2>
+
+	<table>
+		<tr>
+		  <th>Logic</th>
+		  <th>URL</th>
+		  <th>HTTP Method</th>
+		  <th>Query Parameters</th>
+		  <th>Request Data Body Format</th>
+		  <th>Response Data Body Format</th>
+		</tr>
+		<tr>
+		  <td>Return a list of ALL movies to the user</td>
+		  <td>/movies</td>
+		  <td>GET</td>
+		  <td>None</td>
+		  <td>None</td>
+		  <td>JSON data type containing details about all the movies</td>
+		</tr>
+		<tr>
+		  <td>Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user</td>
+		  <td>/movies/:title</td>
+		  <td>GET</td>
+		  <td>None</td>
+		  <td>None</td>
+		  <td>JSON object containing details of specific movie</td>
+		</tr>
+		<tr>
+		  <td>Return data about a genre (description) by name/title (e.g., “Thriller”)
+		  </td>
+		  <td>/movies/genre/:genreName</td>
+		  <td>GET</td>
+		  <td>None</td>
+		  <td>None</td>
+		  <td>Json object containg information about a specific movie genre</td>
+		</tr>
+		<tr>
+		  <td>Return data about a director (bio, birth year, death year) by name
+		  </td>
+		  <td>/movies/directors/:directorName</td>
+		  <td>GET</td>
+		  <td>None</td>
+		  <td>None</td>
+		  <td>JSON object containing informatio about a specific director (bio, birth year, death year)</td>
+		</tr>
+		<tr>
+		  <td>Allow new users to register
+		  </td>
+		  <td>/users</td>
+		  <td>POST</td>
+		  <td>None</td>
+		  <td>JSON object is added, e.g. { "name": "Mark", "dateOfBirth": "dd/mm/yyyy", "favouriteMovies": [movie1, movie2, movie3] }</td>
+		  <td>JSON object sent back from the request plus a random ID number assigned to the user</td>
+		</tr>
+		<tr>
+		  <td>Allow users to update their user info (username)
+		  </td>
+		  <td>/users/:id</td>
+		  <td>PUT</td>
+		  <td>None</td>
+		  <td>JSON object containing the data to modify, e.g. {"name": "New Name"}</td>
+		  <td>Json object sent back from the request with updated infromation</td>
+		</tr>
+		<tr>
+		  <td>Allow users to add a movie to their list of favorites (showing only a text that a movie has been added)
+		  </td>
+		  <td>/users/:id/:movieTitle</td>
+		  <td>POST</td>
+		  <td>None</td>
+		  <td>JSON object containing info about the movie the user wants to add, e.g. {"title": "name of movie", "director": "name", "genre": "movie genre"}</td>
+		  <td>A message reporting the movie has been added succefully</td>
+		</tr>
+		<tr>
+		  <td>Allow users to remove a movie from their list of favorites 
+		  </td>
+		  <td>/users/:id/:movieTitle</td>
+		  <td>DELETE</td>
+		  <td>None</td>
+		  <td>None</td>
+		  <td>A message reporting that the movie has been succefully removed</td>
+		</tr>
+		<tr>
+		  <td>Allow existing users to deregister
+		  </td>
+		  <td>/users/:id</td>
+		  <td>DELETE</td>
+		  <td>None</td>
+		  <td>None</td>
+		  <td>A message reporting that the user has been succefully removed</td>
+		</tr>
+	  
+	  </table>
 
 </body>
 </html>
