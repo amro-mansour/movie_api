@@ -4,7 +4,9 @@
   "description": "This web application will provide users with access to information about different movies, actors, genres, et. Users will be able to sign up and add their personal information and prefernces.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +22,11 @@
     "body-parser": "^1.19.2",
     "express": "^4.17.3",
     "lodash": "^4.17.21",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "eslint": "^8.12.0"
+    "eslint": "^8.12.0",
+    "nodemon": "^2.0.15"
   }
 }

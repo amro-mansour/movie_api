@@ -2,6 +2,7 @@
 const express = require('express'),
  morgan = require('morgan'); // the morgan library is imported to be able to log any information required
 
+
 // Here Express is set to a variable "app" to then use its functionalities throughout the app
 const app = express();
 
@@ -10,7 +11,7 @@ app.use(express.static('public'));
 app.use(morgan('common'));
 
 // A list of my favourite movies
-let topMovies = [
+let movies = [
   {
     title: 'Inception',
     director: 'Christopher Nolan'
@@ -58,12 +59,60 @@ app.get('/documentation.html', (req, res) => {
   res.sendFile('documentation.html', { root: __dirname });
 });
 
+// This will return the entire list of movies as a JSON object 
 app.get('/movies', (req, res) => {
-  res.json(topMovies);
+  res.status(200).json(movies);
 });
 
 app.get('/', (req, res) => {
   res.send('Welcome to my movies library!')
+})
+
+// This will return a JSON object about a specific movie
+app.get('/movies/:title', (req, res) => {
+  const { title } = req.params;
+  const movie = movies.find( movie => movie.title === title );
+
+  if (movie) {
+    res.status(200).json(movie);
+  } else {
+    res.status(400).send('This movie is unvailable');
+  }
+})
+
+// This will return a JSON object about a specific genre
+app.get('/movies/genre/:genreName', (req, res) => {
+  res.send('This is a JSON object containing information about a specific movie genre');
+})
+
+// This will return a JSON object about a specific genre
+app.get('/movies/directors/:directorName', (req, res) => {
+  res.send('This is a JSON object containing infromation about a specific director');
+})
+
+// This will allow new users to register 
+app.post('/users', (req, res) => {
+  res.send('The new user has been added succefully');
+})
+
+// This allows users to update their user info
+app.put('/users/:id', (req, res) => {
+  res.send('The following information for user x have been updated');
+})
+
+// This allows users to add a movie to their list of favorites 
+app.post('/users/:id/:movieTitle', (req, res) => {
+  res.send('The movie has been added to your list of favorites');
+})
+
+// This allows users to remove a movie from their list of favorites
+app.delete('/users/:id/:movieTitle', (req, res) => {
+  res.send('The movie has been removed from your list of favorites');
+})
+
+// This allows existing users to deregister
+app.delete('/users/:id', (req, res) => {
+  res.send('The user x has been removed succefully')
 })
 
 // This code would execute every time an error occurs in the code (that hasn't already been handled elsewhere)
