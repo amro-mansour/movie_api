@@ -2,6 +2,11 @@
 const express = require('express'),
  bodyParser = require('body-parser'),
  morgan = require('morgan'); // the morgan library is imported to be able to log any information required
+ 
+ const cors = require('cors'); // Importing CORS into the app to then allow the domain specified have access to the app
+
+ // This adds the express validator, so that it can be used to validate users input on the app to prevent a malicious entity from making requests to the app
+ const { check, validationResult } = require('express-validator');
 
 // Here Express is set to a variable "app" to then use its functionalities throughout the app
 const app = express();
@@ -20,6 +25,22 @@ mongoose.connect('mongodb://localhost:27017/myFlixDB', {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors()); // This uses CORS and it allows all domain to have access to the app
+
+// This code would integrate CORS into the app to allow only the domains specified below to make requests to the API
+/*let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];  // Domains allowd to make requests to the API
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+})); 
+*/
 
 // Importing the auth.js file, the (app) argument ensures that Express is available in the “auth.js” file as well
 let auth = require('./auth')(app);
@@ -98,15 +119,27 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session
 });
 
 // This will allow new users to register 
-app.post('/users', (req, res) => {
-  Users.findOne({Username: req.body.Username})
+app.post('/users',
+[
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+  let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+  let hashedPassword = Users.hashPassword(req.body.Password);
+  Users.findOne({Username: req.body.Username}) // Search to see if a user with the requested username already exists
     .then((user) => {
-      if (user) {
+      if (user) {  //If the user is found, send a response that it already exists
         return res.status(400).send(req.body.Username + ' already exists');
       } else {
         Users.create({
           Username: req.body.Username,
-          Password: req.body.Password,
+          Password: hashedPassword,
           Email: req.body.Email,
           Birthday: req.body.Birthday
         })
@@ -124,12 +157,25 @@ app.post('/users', (req, res) => {
 });
 
 // This allows users to update their user info
-app.put('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.put('/users/:Username',
+[
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+],
+ passport.authenticate('jwt', {session: false}), (req, res) => {
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOneAndUpdate({ Username: req.params.Username }, { 
     $set:
       {
         Username: req.body.Username,
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
         Birthday: req.body.Birthday
       }
@@ -161,7 +207,7 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {sessi
   });
 });
 
-// This allows users to remove a movie from their list of favorites
+// This allows users to delete a movie from their list of favorites
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
   Users.findOneAndUpdate({Username: req.params.Username}, {
     $pull: { FavouriteMovies: req.params.MovieID }
@@ -199,6 +245,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+// App Listener 
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+ console.log('Listening on Port ' + port);
 });
