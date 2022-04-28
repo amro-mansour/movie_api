@@ -1,4 +1,4 @@
-# movie API app
+# Movie API app
 
 This application was developed as the backend part of a movies application. An API was created to allow users of the app to have access to the database of movies. Any user can create an account and then login. Once a user is logged in, he/she receives a JWT token which allows him/ her to make queries to the database. These queries will provide information about movies, movies genre, directors, etc. The users of the app can create a list of their favourite movies, where they can add and delete movies. Finally a user can also delete his/ her profile.
 
