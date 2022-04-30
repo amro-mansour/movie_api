@@ -32,20 +32,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // This uses CORS and it allows all domain to have access to the app
 
-// This code would integrate CORS into the app to allow only the domains specified below to make requests to the API
-/*let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];  // Domains allowd to make requests to the API
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-})); 
-*/
 
 // Importing the auth.js file, the (app) argument ensures that Express is available in the “auth.js” file as well
 let auth = require('./auth')(app);
