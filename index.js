@@ -19,8 +19,8 @@ const Movies = Models.Movie;
 const Users = Models.User
 
 // Connection to the local database
-/* mongoose.connect('mongodb://localhost:27017/myFlixDB', { 
-  useNewUrlParser: true, useUnifiedTopology: true 
+/* mongoose.connect('mongodb://localhost:27017/myFlixDB', {
+  useNewUrlParser: true, useUnifiedTopology: true
 });  */
 
 // Connection to the online database
@@ -50,8 +50,8 @@ app.get('/documentation.html', (req, res) => {
   res.sendFile('documentation.html', { root: __dirname });
 });
 
-// This will return the entire list of movies as a JSON object 
-app.get('/movies', (req, res) => {
+// This will return the entire list of movies as a JSON object
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find().then((movies) => {
     res.status(201).json(movies);
   })
@@ -109,7 +109,7 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
     });
 });
 
-// This will allow new users to register 
+// This will allow new users to register
 app.post('/users',
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
@@ -182,7 +182,7 @@ app.put('/users/:Username',
       });
   });
 
-// This allows users to add a movie to their list of favorites 
+// This allows users to add a movie to their list of favorites
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
     $push: { FavouriteMovies: req.params.MovieID }
@@ -236,7 +236,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
-// App Listener 
+// App Listener
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
   console.log('Listening on Port ' + port);
