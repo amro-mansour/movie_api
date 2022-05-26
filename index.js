@@ -230,6 +230,21 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
     });
 });
 
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send(req.params.Username + ' was not found');
+      } else {
+        res.json(user);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
 // This code would execute every time an error occurs in the code (that hasn't already been handled elsewhere)
 app.use((err, req, res, next) => {
   console.error(err.stack);
