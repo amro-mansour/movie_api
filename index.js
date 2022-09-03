@@ -18,11 +18,6 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User
 
-// Connection to the local database
-/* mongoose.connect('mongodb://localhost:27017/myFlixDB', {
-  useNewUrlParser: true, useUnifiedTopology: true
-});  */
-
 // Connection to the online database
 mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true, useUnifiedTopology: true
@@ -50,7 +45,12 @@ app.get('/documentation.html', (req, res) => {
   res.sendFile('documentation.html', { root: __dirname });
 });
 
-// This will return the entire list of movies as a JSON object
+/**
+ * Returns the list of all movies from the database 
+ * Method: GET
+ * @requires passport
+ * @returns array of movie objects
+ */
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find().then((movies) => {
     res.status(201).json(movies);
@@ -65,7 +65,13 @@ app.get('/', (req, res) => {
   res.send('Welcome to my movies library!')
 })
 
-// This will return a JSON object about a specific movie
+/**
+ * Returns a single movie by title 
+ * Method: GET
+ * @requires passport
+ * @param Title of movie 
+ * @returns movie object
+ */
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movie) => {
@@ -77,7 +83,13 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
     });
 });
 
-// This will return a JSON object about a specific genre
+/**
+ * Returns a genre description by its name 
+ * Method: GET
+ * @requires passport
+ * @param Name of genre  
+ * @returns genre object
+ */
 app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.genreName })
     .then((movie) => {
@@ -93,7 +105,13 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
     });
 });
 
-// This will return a JSON object about a specific director
+/**
+ * Returns information about a director by the name 
+ * Method: GET
+ * @requires passport
+ * @param Name of director 
+ * @returns director object 
+ */
 app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Director.Name': req.params.directorName })
     .then((movie) => {
@@ -213,6 +231,33 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
       }
     });
 });
+
+/**
+ * GET: Returns a list of favorite movies from the user
+ * Request body: Bearer token
+ * @param Username
+ * @returns array of favorite movies
+ * @requires passport
+ */
+app.get(
+  '/users/:Username/movies',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.findOne({ Username: req.params.Username })
+      .then((user) => {
+        if (user) {
+          // If a user with the corresponding username was found, return user info
+          res.status(200).json(user.FavoriteMovies);
+        } else {
+          res.status(400).send('Could not find favorite movies for this user');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
 
 // This allows existing users to deregister
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
