@@ -2,7 +2,7 @@
 const express = require('express'),
   bodyParser = require('body-parser'),
   morgan = require('morgan'); // the morgan library is imported to be able to log any information required
-cors = require('cors');
+const cors = require('cors');
 
 const cors = require('cors'); // Importing CORS into the app to then allow the domain specified have access to the app
 
