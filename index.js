@@ -39,7 +39,7 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors()); // This uses CORS and it allows all domain to have access to the app
+
 
 
 // Importing the auth.js file, the (app) argument ensures that Express is available in the “auth.js” file as well
